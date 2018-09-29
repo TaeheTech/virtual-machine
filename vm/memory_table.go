@@ -18,7 +18,7 @@ package vm
 
 import (
 	"math/big"
-
+    "github.com/vm-project/common/math"
 )
 
 func memorySha3(stack *Stack) *big.Int {

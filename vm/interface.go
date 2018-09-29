@@ -21,48 +21,42 @@ import (
 
 
 	"github.com/vm-project/common"
-	"github.com/vm-project/dep/statedb"
-	"github.com/vm-project/vm/params"
-	"github.com/vm-project/dep/asset"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/state"
 )
 
 // execConfig provide basic config data for running
 //all parameter transaction needed
-type execConfig struct {
-	//total gas of block
-	gp         *GasPool
-    //
-	vm         *vm.EVM
-	//global config
-	config     params.ChainConfig
-	//
-	tx         *types.Transaction
-	//
-	bc          ChainContext
-	//
-	header     *types.Header
-	//all Transactions in block total used
-	usedGas     uint64
-	//from
-	author     *common.Address
-	//
-	statedb    *statedb.StateDB
-	//asset func
-	asset     *asset.Asset
-	//
-	cfg         vm.Config
-	//gas used
-	gas        uint64
-	//
-	gasPrice   *big.Int
-	//Gas already get via buy gas
-	initialGas uint64
-	//contract data,input data
-	data       []byte
-}
+//type execConfig struct {
+//	//total gas of block
+//	gp         *GasPool
+//    //
+//	vm         *vm.EVM
+//	//global config
+//	config     params.ChainConfig
+//	//
+//	tx         *types.Transaction
+//	//
+//	bc          ChainContext
+//	//
+//	header     *types.Header
+//	//all Transactions in block total used
+//	usedGas     uint64
+//	//from
+//	author     *common.Address
+//	//
+//	statedb    *statedb.StateDB
+//	//asset func
+//	asset     *asset.Asset
+//	//
+//	cfg         vm.Config
+//	//gas used
+//	gas        uint64
+//	//
+//	gasPrice   *big.Int
+//	//Gas already get via buy gas
+//	initialGas uint64
+//	//contract data,input data
+//	data       []byte
+//}
 
 // Message represents a message sent to a contract.
 //one msg only process one operation
@@ -89,21 +83,21 @@ type Message struct {
 	Data []byte
 }
 
-// Receipt represents the results of a transaction.
-type Receipt struct {
-	// Consensus fields
-	PostState         []byte        `json:"root"`
-	Status            uint64        `json:"status"`
-	Internal          []*InternalTx `json:"internal" `
-	CumulativeGasUsed uint64        `json:"cumulativeGasUsed"`
-	Bloom             Bloom         `json:"logsBloom"        `
-	Logs              []*Log        `json:"logs"             `
-
-	// Implementation fields (don't reorder!)
-	TxHash          common.Hash    `json:"transactionHash"`
-	ContractAddress common.Address `json:"contractAddress"`
-	GasUsed         uint64         `json:"gasUsed"`
-}
+//// Receipt represents the results of a transaction.
+//type Receipt struct {
+//	// Consensus fields
+//	PostState         []byte        `json:"root"`
+//	Status            uint64        `json:"status"`
+//	Internal          []*InternalTx `json:"internal" `
+//	CumulativeGasUsed uint64        `json:"cumulativeGasUsed"`
+//	Bloom             Bloom         `json:"logsBloom"        `
+//	Logs              []*Log        `json:"logs"             `
+//
+//	// Implementation fields (don't reorder!)
+//	TxHash          common.Hash    `json:"transactionHash"`
+//	ContractAddress common.Address `json:"contractAddress"`
+//	GasUsed         uint64         `json:"gasUsed"`
+//}
 //zipper vm interface for external use
 type zvm interface{
 
@@ -112,6 +106,5 @@ type zvm interface{
 	NewMessage(from common.Address, to *common.Address, nonce uint64, amount *big.Int, gasLimit uint64, gasPrice *big.Int, data []byte, checkNonce bool) Message
 	//NewMessage( Address,  *Address,  uint64,  *big.Int,  uint64,  *big.Int,  []byte,  bool) Message
 	//
-	TransactionExec( *execConfig, *Message) (*Receipt, uint64, error)
+	//TransactionExec( *execConfig, *Message) (*Receipt, uint64, error)
 }
-

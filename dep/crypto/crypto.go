@@ -29,9 +29,10 @@ import (
 	"os"
 
 	"github.com/vm-project/common"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
-	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/vm-project/common/math"
+	"github.com/vm-project/dep/crypto/sha3"
+
+	"github.com/vm-project/utils/rlp"
 )
 
 var (
@@ -75,6 +76,13 @@ func CreateAddress(b common.Address, nonce uint64) common.Address {
 	data, _ := rlp.EncodeToBytes([]interface{}{b, nonce})
 	return common.BytesToAddress(Keccak256(data)[12:])
 }
+
+// CreateAssetAddress creates an  address given the bytes and the nonce
+func CreateAssetAddress(b common.Address, nonce uint64, name string) common.Address {
+	data, _ := rlp.EncodeToBytes([]interface{}{b, nonce, name})
+	return common.BytesToAddress(Keccak256(data)[12:])
+}
+
 
 // ToECDSA creates a private key with the given D value.
 func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) {

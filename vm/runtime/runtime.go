@@ -28,7 +28,6 @@ import (
 	"github.com/vm-project/dep/asset"
 	"github.com/vm-project/dep/crypto"
 	"github.com/vm-project/dep/statedb"
-	"github.com/vm-project/dep/memdb"
 )
 
 // Config is a basic type specifying certain configuration flags for running
@@ -94,7 +93,7 @@ func NewEnv(cfg *Config) *vm.EVM {
 	fmt.Println("in NewEnv ...")
 	context := vm.Context{
 		CanTransfer: vm.CanTransfer,
-		Transfer:    vm.Transfer,
+		//Transfer:    vm.Transfer,
 		GetHash:     func(uint64) common.Hash { return common.Hash{} },
 
 		From:      cfg.Origin,
@@ -199,7 +198,7 @@ func Create(input []byte, cfg *Config) ([]byte, common.Address, uint64, error) {
 	setDefaults(cfg)
 
 	if cfg.State == nil {
-		cfg.State, _ = statedb.New(common.Hash{}, statedb.NewDatabase(zdb.NewMemDatabase()))
+		cfg.State, _ = statedb.New(common.Hash{})
 	}
 	var (
 		vmenv  = NewEnv(cfg)

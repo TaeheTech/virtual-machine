@@ -18,24 +18,7 @@ package params
 
 import "math/big"
 
-// GasTable organizes gas prices for different ethereum phases.
-type GasTable struct {
-	ExtcodeSize uint64
-	ExtcodeCopy uint64
-	Balance     uint64
-	SLoad       uint64
-	Calls       uint64
-	Suicide     uint64
 
-	ExpByte uint64
-
-	// CreateBySuicide occurs when the
-	// refunded account is one that does
-	// not exist. This logic is similar
-	// to call. May be left nil. Nil means
-	// not charged.
-	CreateBySuicide uint64
-}
 // ChainConfig is the core config which determines the blockchain settings.
 // ChainConfig is stored in the database on a per block basis.
 type ChainConfig struct {

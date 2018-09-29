@@ -27,15 +27,15 @@ import (
 	"runtime/pprof"
 	"time"
 
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 	"github.com/vm-project/vm"
 	"github.com/vm-project/vm/runtime"
 	"github.com/vm-project/dep/statedb"
 
-	"github.com/vm-project/dep/memdb"
 	"github.com/vm-project/vm/params"
 	"github.com/vm-project/utils"
 	"github.com/vm-project/common"
+	"github.com/vm-project/vm/cmd/compiler"
 )
 
 var runCommand = cli.Command{
@@ -80,7 +80,7 @@ func runCmd(ctx *cli.Context) error {
 	var (
 		tracer      vm.Tracer
 		debugLogger *vm.StructLogger
-		statedb     *statedb.StateDB
+		state     *statedb.StateDB
 		chainConfig *params.ChainConfig
 		sender      = common.BytesToAddress([]byte("sender"))
 		receiver    = common.BytesToAddress([]byte("receiver"))
@@ -90,19 +90,19 @@ func runCmd(ctx *cli.Context) error {
 		//tracer = NewJSONLogger(logconfig, os.Stdout)
 	} else if ctx.GlobalBool(DebugFlag.Name) {
 		debugLogger = vm.NewStructLogger(logconfig)
-		//tracer = debugLogger
+		tracer = debugLogger
 	} else {
 		//debugLogger = vm.NewStructLogger(logconfig)
 	}
 
 
-	statedb, _ = statedb.New(common.Hash{})
+	state, _ = statedb.New(common.Hash{})
 
 
 	if ctx.GlobalString(SenderFlag.Name) != "" {
 		sender = common.HexToAddress(ctx.GlobalString(SenderFlag.Name))
 	}
-	statedb.CreateAccount(sender)
+	state.CreateAccount(sender)
 
 	if ctx.GlobalString(ReceiverFlag.Name) != "" {
 		receiver = common.HexToAddress(ctx.GlobalString(ReceiverFlag.Name))
@@ -141,7 +141,7 @@ func runCmd(ctx *cli.Context) error {
 		if err != nil {
 			return err
 		}
-		//bin, err := compiler.Compile(fn, src, false)
+		bin, err := compiler.Compile(fn, src, false)
 		if err != nil {
 			return err
 		}
@@ -151,7 +151,7 @@ func runCmd(ctx *cli.Context) error {
 	initialGas := ctx.GlobalUint64(GasFlag.Name)
 	runtimeConfig := runtime.Config{
 		Origin:      sender,
-		State:       statedb,
+		State:       state,
 		GasLimit:    initialGas,
 		GasPrice:    utils.GlobalBig(ctx, PriceFlag.Name),
 		Value:       utils.GlobalBig(ctx, ValueFlag.Name),
@@ -185,7 +185,7 @@ func runCmd(ctx *cli.Context) error {
 		ret, _, leftOverGas, err = runtime.Create(input, &runtimeConfig)
 	} else {
 		if len(code) > 0 {
-			statedb.SetCode(receiver, code)
+			state.SetCode(receiver, code)
 		}
 		//exec
 		ret, leftOverGas, err = runtime.Call(receiver, common.Hex2Bytes(ctx.GlobalString(InputFlag.Name)), &runtimeConfig)
@@ -193,8 +193,8 @@ func runCmd(ctx *cli.Context) error {
 	execTime := time.Since(tstart)
     //dump
 	if ctx.GlobalBool(DumpFlag.Name) {
-		statedb.IntermediateRoot(true)
-		fmt.Println(string(statedb.Dump()))
+		//state.IntermediateRoot(true)
+		//fmt.Println(string(state.Dump()))
 	}
     //
 	if memProfilePath := ctx.GlobalString(MemProfileFlag.Name); memProfilePath != "" {
@@ -216,7 +216,7 @@ func runCmd(ctx *cli.Context) error {
 			vm.WriteTrace(os.Stderr, debugLogger.StructLogs())
 		}
 		fmt.Fprintln(os.Stderr, "#### LOGS ####")
-		vm.WriteLogs(os.Stderr, statedb.Logs())
+		vm.WriteLogs(os.Stderr, state.Logs())
 	}
     //stat dump
 	if ctx.GlobalBool(StatDumpFlag.Name) {

@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"sync/atomic"
 	"github.com/vm-project/common/math"
+	"github.com/vm-project/vm/log"
+	"github.com/vm-project/vm/params"
 )
 
 // Config are the configuration options for the Interpreter
@@ -52,7 +54,7 @@ type Config struct {
 type Interpreter struct {
 	evm      *EVM
 	cfg      Config
-	gasTable  GasTable
+	gasTable  params.GasTable
 	intPool  *intPool
 
 	readOnly   bool   // Whether to throw on stateful modifications
@@ -81,7 +83,7 @@ func NewInterpreter(evm *EVM, cfg Config) *Interpreter {
 	return &Interpreter{
 		evm:      evm,
 		cfg:      cfg,
-		gasTable: GasTableEIP158,
+		gasTable: params.GasTableEIP158,
 		intPool:  newIntPool(),
 	}
 }
@@ -164,9 +166,9 @@ func (in *Interpreter) Run(contract *Contract, input []byte) (ret []byte, err er
 		// enough stack items available to perform the operation.
 		op = contract.GetOp(pc)
 		//fmt.Println("interpreter pc=",pc,"code=%x",contract.Code[pc],"name=",op)
-		fmt.Printf("interpreter pc=%d\t",pc)
-		fmt.Printf("code=%x\t",contract.Code[pc])
-		fmt.Printf("name=%s\n",op)
+		vmlog.DebugPrint("interpreter pc=%d\t",pc)
+		vmlog.DebugPrint("code=%x\t",contract.Code[pc])
+		vmlog.DebugPrint("name=%s\n",op)
 		operation := in.cfg.JumpTable[op]
 		//fmt.Printf("before operation.execute 1 \n")
 		if !operation.valid {
@@ -241,7 +243,6 @@ func (in *Interpreter) Run(contract *Contract, input []byte) (ret []byte, err er
 		switch {
 		case err != nil:
 			fmt.Errorf("switch err != nil")
-			fmt.Printf("switch err != nil\n")
 			return nil, err
 		case operation.reverts:
 			fmt.Errorf("operation.reverts")

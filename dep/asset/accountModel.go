@@ -22,8 +22,9 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
-
-	"github.com/zipper-project/z0/crypto"
+	"github.com/vm-project/common"
+	"github.com/vm-project/dep/crypto"
+	"github.com/vm-project/utils/rlp"
 )
 
 //AccountAssetInfo .

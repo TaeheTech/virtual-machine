@@ -22,9 +22,9 @@ import (
 	"math/big"
 
 	"github.com/vm-project/common"
-	"github.com/zipper-project/z0/utils/rlp"
-	"github.com/zipper-project/z0/types"
-	"github.com/vm-project/dep/statedb"
+	"github.com/vm-project/utils/rlp"
+
+	"github.com/vm-project/types"
 )
 
 const (
@@ -41,7 +41,7 @@ var (
 
 //Asset operating user assets
 type Asset struct {
-	db statedb.StateDB
+	db StateDB
 }
 
 //NewAsset create Asset

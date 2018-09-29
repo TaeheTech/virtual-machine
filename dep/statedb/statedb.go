@@ -20,6 +20,7 @@ import (
 	"sync"
     "github.com/vm-project/common"
 	"github.com/vm-project/dep/crypto"
+	"github.com/vm-project/types"
 )
 //type commAddress [AddressLength]byte
 type revision struct {
@@ -75,7 +76,7 @@ type StateDB struct {
 	//thash, bhash common.Hash
 	//txIndex      int
 	//addlog
-	logs    map[common.Hash][]*Log
+	logs    map[common.Hash][]*types.Log
 	logSize uint
     // ?
 	preimages map[common.Hash][]byte
@@ -97,7 +98,7 @@ func New(root common.Hash ) (*StateDB, error) {
 		//trie:              tr,
 		stateObjects:      make(map[common.Address]*stateObject),
 		//stateObjectsDirty: make(map[common.Address]struct{}),
-		logs:              make(map[common.Hash][]*Log),
+		logs:              make(map[common.Hash][]*types.Log),
 		preimages:         make(map[common.Hash][]byte),
 		journal:           newJournal(),
 	}, nil
@@ -124,7 +125,7 @@ func (self *StateDB) Reset(root common.Hash) error {
 	//self.thash = common.Hash{}
 	//self.bhash = common.Hash{}
 	//self.txIndex = 0
-	self.logs = make(map[common.Hash][]*Log)
+	self.logs = make(map[common.Hash][]*types.Log)
 	self.logSize = 0
 	self.preimages = make(map[common.Hash][]byte)
 	//self.clearJournalAndRefund()
@@ -142,13 +143,13 @@ func (self *StateDB) AddLog(log *Log) {
 	self.logSize++
 }
 
-func (self *StateDB) GetLogs(hash common.Hash) []*Log {
+func (self *StateDB) GetLogs(hash common.Hash) []*types.Log {
 	return self.logs[hash]
 }
 
 
-func (self *StateDB) Logs() []*Log {
-	var logs []*Log
+func (self *StateDB) Logs() []*types.Log {
+	var logs []*types.Log
 	for _, lgs := range self.logs {
 		logs = append(logs, lgs...)
 	}

@@ -25,6 +25,7 @@ import (
 
 	"github.com/vm-project/common"
 	"github.com/vm-project/common/math"
+	"github.com/vm-project/types"
 )
 
 type Storage map[common.Hash] common.Hash

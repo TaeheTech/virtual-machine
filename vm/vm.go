@@ -95,7 +95,7 @@ type EVM struct {
 
 // NewEVM retutrns a new EVM . The returned EVM is not thread safe and should
 // only ever be used *once*.
-func NewEVM(ctx Context, asset *asset.Asset, statedb state.StateDB, vmConfig Config) *EVM {
+func NewEVM(ctx Context, asset *asset.Asset, statedb statedb.StateDB, vmConfig Config) *EVM {
 	//fmt.Println("in NewEvm ...")
 	evm := &EVM{
 		Context:     ctx,

@@ -156,8 +156,8 @@ func init() {
 		DisableStackFlag,
 	}
 	app.Commands = []cli.Command{
-		//compileCommand,
-		//disasmCommand,
+		compileCommand,
+		disasmCommand,
 		runCommand,
 		//stateTestCommand,
 	}
